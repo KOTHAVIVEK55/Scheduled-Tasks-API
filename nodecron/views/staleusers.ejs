@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Delete Stale Users</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    180deg,
+    #fff7f4 0%,
+    #ffffff 65%
+  );
+
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  top: -220px;
+  right: -220px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 75, 43, 0.18),
+    transparent 70%
+  );
+  z-index: 0;
+}
+
+.container {
+  width: 1000px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 40px;
+
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.18),
+    0 0 0 1px rgba(255,75,43,0.08);
+
+  position: relative;
+  z-index: 1;
+}
+
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 5px;
+  width: 100%;
+  background: linear-gradient(90deg, #ff4b2b, #ff416c);
+  border-radius: 18px 18px 0 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff4b2b, #ff416c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: #fff;
+}
+
+.description {
+  color: #555;
+  font-size: 15px;
+  margin: 18px 0 28px;
+}
+
+.rule {
+  background: #fff4f1;
+  border-left: 5px solid #ff4b2b;
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+.flow {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 40px;
+}
+
+.flow-box {
+  flex: 1;
+  padding: 22px;
+  border-radius: 14px;
+  background: #fafafa;
+  border: 1px solid #eee;
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+.flow-box:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+}
+
+.flow-box span {
+  font-size: 30px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.run-section {
+  text-align: center;
+}
+
+.run-btn {
+  padding: 16px 44px;
+  background: linear-gradient(135deg, #ff4b2b, #ff416c);
+  border: none;
+  border-radius: 32px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.run-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(255,75,43,0.35);
+}
+
+.run-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loader {
+  display: none;
+  margin-top: 16px;
+  color: #555;
+  font-size: 14px;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid #ddd;
+  border-top: 3px solid #ff4b2b;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.result-box {
+  margin-top: 32px;
+  background: #fafafa;
+  border-radius: 14px;
+  padding: 22px;
+  border: 1px solid #eee;
+  font-size: 14px;
+  line-height: 1.7;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stale-list {
+  margin-top: 18px;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+}
+
+.stale-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #444;
+  border-bottom: 1px dashed #eee;
+}
+
+.stale-item:last-child {
+  border-bottom: none;
+}
+
+.stale-item span {
+  color: #ff4b2b;
+  font-weight: 600;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-icon">🧹</div>
+    <h1>Delete Stale Users</h1>
+  </div>
+
+  <p class="description">
+    This task removes user accounts that have been inactive for a long period
+    to keep the system clean and efficient.
+  </p>
+
+  <div class="rule">
+    <strong>Rule:</strong> Users inactive beyond the configured threshold
+    are considered stale and will be removed.
+  </div>
+
+  <div class="flow">
+    <div class="flow-box"><span>🔍</span>Scan Users</div>
+    <div class="flow-box"><span>⚠️</span>Detect Inactive</div>
+    <div class="flow-box"><span>🗑️</span>Delete Accounts</div>
+  </div>
+
+  <div class="run-section">
+    <form id="cleanupForm">
+      <button id="runBtn" class="run-btn">Run Cleanup Job</button>
+    </form>
+
+    <div id="loader" class="loader">
+      <span class="spinner"></span>
+      Cleaning inactive users…
+    </div>
+  </div>
+
+  <div id="resultBox"></div>
+
+</div>
+<script>
+document.getElementById("cleanupForm").addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  const btn = document.getElementById("runBtn");
+  const loader = document.getElementById("loader");
+  const resultBox = document.getElementById("resultBox");
+
+  btn.disabled = true;
+  btn.innerText = "Running…";
+  loader.style.display = "block";
+  resultBox.innerHTML = "";
+
+  try {
+    const res = await fetch("/stale/clean", { method: "POST" });
+    const data = await res.json();
+
+    loader.style.display = "none";
+    btn.innerText = "Completed";
+
+   let usersHTML = "";
+
+  if (data.staleUsers.length > 0) {
+    usersHTML = `
+      <div class="stale-list">
+        <strong>🧾 Stale Users:</strong>
+        ${data.staleUsers.map(u => `
+          <div class="stale-item">
+            <div>${u.username}</div>
+            <span>${u.email}</span>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  resultBox.innerHTML = `
+    <div class="result-box">
+      <strong>Users Scanned:</strong> ${data.scannedUsers}<br>
+      <strong>Stale Users Found:</strong> ${data.staleUsersFound}<br>
+      <strong>Users Deleted:</strong> ${data.deletedUsers}<br>
+      <strong>Executed At:</strong> ${new Date(data.executedAt).toLocaleString()}
+      ${usersHTML}
+    </div>
+  `;
+
+
+
+  } catch (err) {
+    loader.style.display = "none";
+    btn.disabled = false;
+    btn.innerText = "Run Cleanup Job";
+    alert("Cleanup failed");
+  }
+});
+</script>
+
+</body>
+</html>

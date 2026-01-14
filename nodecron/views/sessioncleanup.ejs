@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cleanup Sessions</title>
+
+<style>
+* { box-sizing: border-box; font-family: "Segoe UI", sans-serif; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(900px 500px at 20% 20%, rgba(255,75,43,0.18), transparent),
+    radial-gradient(700px 400px at 80% 80%, rgba(255,65,108,0.15), transparent),
+    #f5f5f5;
+  overflow: hidden;
+}
+
+/* FLOATING ICONS */
+.floating {
+  position: absolute;
+  font-size: 40px;
+  opacity: 0.12;
+  animation: float 12s linear infinite;
+}
+
+.f1 { top: 10%; left: 10%; }
+.f2 { top: 70%; left: 15%; animation-delay: 3s; }
+.f3 { top: 20%; right: 10%; animation-delay: 6s; }
+.f4 { bottom: 10%; right: 20%; animation-delay: 9s; }
+
+@keyframes float {
+  from { transform: translateY(0); }
+  to { transform: translateY(-120vh); }
+}
+
+.container {
+  width: 1000px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+  position: relative;
+  z-index: 2;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff4b2b, #ff416c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: #fff;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255,75,43,0.6); }
+  70% { box-shadow: 0 0 0 15px rgba(255,75,43,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,75,43,0); }
+}
+
+.description {
+  color: #666;
+  font-size: 14px;
+  margin: 15px 0 25px;
+}
+
+/* FLOW */
+.flow {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 35px;
+}
+
+.flow-box {
+  flex: 1;
+  padding: 20px;
+  border-radius: 12px;
+  background: #fafafa;
+  border: 1px solid #eee;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.flow-box:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+.flow-box span {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* BUTTON */
+.run-section {
+  text-align: center;
+}
+
+.run-btn {
+  padding: 16px 42px;
+  background: linear-gradient(135deg, #ff4b2b, #ff416c);
+  border: none;
+  border-radius: 30px;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.run-btn:disabled { opacity: 0.7; }
+
+.loader {
+  display: none;
+  margin-top: 15px;
+  color: #555;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid #ddd;
+  border-top: 3px solid #ff4b2b;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* RESULT */
+.result-box {
+  margin-top: 30px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="floating f1">🔐</div>
+<div class="floating f2">⏱️</div>
+<div class="floating f3">🧹</div>
+<div class="floating f4">📊</div>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-icon">🔐</div>
+    <h1>Cleanup Sessions</h1>
+  </div>
+
+  <p class="description">
+    Automatically removes expired login sessions to keep the system secure,
+    fast, and clean.
+  </p>
+
+  <div class="flow">
+    <div class="flow-box"><span>📥</span>Scan Sessions</div>
+    <div class="flow-box"><span>⏳</span>Check Expiry</div>
+    <div class="flow-box"><span>🧹</span>Expire Sessions</div>
+  </div>
+
+  <div class="run-section">
+    <form id="cleanupForm">
+      <button id="runBtn" class="run-btn">Run Session Cleanup</button>
+    </form>
+
+    <div id="loader" class="loader">
+      <span class="spinner"></span>
+      Cleaning expired sessions…
+    </div>
+  </div>
+
+  <div id="resultBox"></div>
+
+</div>
+
+<script>
+document.getElementById("cleanupForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const btn = document.getElementById("runBtn");
+  const loader = document.getElementById("loader");
+  const box = document.getElementById("resultBox");
+
+  btn.disabled = true;
+  btn.innerText = "Running…";
+  loader.style.display = "block";
+  box.innerHTML = "";
+
+  const res = await fetch("/cleanup/clean");
+  const data = await res.json();
+
+  loader.style.display = "none";
+  btn.innerText = "Completed";
+
+  box.innerHTML = `
+    <div class="result-box">
+      <strong>Sessions Scanned:</strong> ${data.scannedSessions}<br>
+      <strong>Expired Found:</strong> ${data.expiredSessionsFound}<br>
+      <strong>Expired Marked:</strong> ${data.expiredSessionsMarked}<br>
+      <strong>Executed At:</strong> ${new Date().toLocaleString()}
+    </div>
+  `;
+});
+</script>
+
+</body>
+</html>

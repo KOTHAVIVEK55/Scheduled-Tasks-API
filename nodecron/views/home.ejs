@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scheduled Tasks Dashboard</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* 🔥 White + Red soft fade background */
+  background:
+    radial-gradient(900px 500px at 15% 20%, rgba(255,75,43,0.18), transparent),
+    radial-gradient(700px 450px at 85% 80%, rgba(255,65,108,0.15), transparent),
+    linear-gradient(180deg, #ffffff, #fff3ef);
+
+  overflow: hidden;
+}
+
+
+.container {
+  width: 1100px;
+  height: 520px;
+  background: #fff;
+  display: flex;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.22),
+    0 0 0 1px rgba(255,75,43,0.12);
+}
+
+
+.left {
+  width: 35%;
+  background: linear-gradient(135deg, #ff4b2b, #ff416c);
+  color: #fff;
+  padding: 50px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.left h2 {
+  margin-bottom: 15px;
+}
+
+.left p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.right {
+  width: 65%;
+  padding: 40px;
+  overflow-y: auto;
+
+  background-color: #ffffff;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(0,0,0,0.025),
+      rgba(0,0,0,0.025) 1px,
+      transparent 1px,
+      transparent 14px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0,0,0,0.02),
+      rgba(0,0,0,0.02) 1px,
+      transparent 1px,
+      transparent 14px
+    );
+}
+
+.dashboard-title {
+  margin-bottom: 25px;
+}
+
+.dashboard-title h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #222;
+}
+
+.dashboard-title p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #777;
+}
+
+.task {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+  background: #fff;
+}
+
+.task:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+}
+
+.task-info h4 {
+  margin: 0 0 6px;
+  color: #333;
+}
+
+.task-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.task-info span {
+  font-size: 13px;
+  color: #888;
+}
+
+.task a {
+  padding: 10px 22px;
+  background: #ff4b2b;
+  color: #fff;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.task a:hover {
+  background: #e03e22;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="left">
+    <h2>Job Scheduling System</h2>
+    <p>
+      This dashboard allows administrators to manage and monitor
+      scheduled backend jobs such as cleanup tasks, reports,
+      log maintenance, and application health checks.
+    </p>
+  </div>
+
+  <div class="right">
+
+    <div class="dashboard-title">
+      <h1>Scheduled Tasks Dashboard</h1>
+      <p>Manage, monitor, and trigger backend automation jobs</p>
+    </div>
+
+    <div class="task">
+      <div class="task-info">
+        <h4>Delete Stale Users</h4>
+        <p>Removes inactive users</p>
+        <span>Example: Deleted 3 users</span>
+      </div>
+      <a href="/delete-users">Open</a>
+    </div>
+
+    <div class="task">
+  <div class="task-left">
+    <div class="task-icon">🔐</div>
+    <div class="task-info">
+      <h4>Cleanup Sessions</h4>
+      <p>Removes expired login sessions</p>
+      <span>Security · Performance · Automation</span>
+    </div>
+  </div>
+  <a href="/cleanup-session">Open</a>
+</div>
+
+
+    <div class="task">
+      <div class="task-info">
+        <h4>Daily Summary</h4>
+        <p>Generates daily report</p>
+        <span>Example: Users: 20 | Sessions: 7</span>
+      </div>
+      <a href="/dailyreport">Open</a>
+    </div>
+
+    <div class="task">
+      <div class="task-info">
+        <h4>Archive Logs</h4>
+        <p>Archives old logs</p>
+        <span>Example: 120 logs archived</span>
+      </div>
+      <a href="/archieve">Open</a>
+    </div>
+
+    <div class="task">
+      <div class="task-info">
+        <h4>Health Check</h4>
+        <p>Application health status</p>
+        <span>Example: Server UP | DB Connected</span>
+      </div>
+      <a href="/health">Open</a>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
